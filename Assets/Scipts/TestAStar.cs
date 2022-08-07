@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class TestAStar : MonoBehaviour
@@ -16,7 +17,7 @@ public class TestAStar : MonoBehaviour
     void Start()
     {
         cubeParent = GameObject.Find("Root").transform;
-        pointGrid = AStar.Instance.pointGrid;
+        pointGrid = AStar.Instance.map.lowMap;
         startPoint = pointGrid[0, 0];
         InitBackGround();
     }
@@ -32,20 +33,22 @@ public class TestAStar : MonoBehaviour
     }
 
     private void InitBackGround() {
-        for(int i = 0; i < 10; i++) {
-            for(int j = 0; j < 10; j++) {
-                CreatePath(new Vector2(i, j), Color.gray);
+        for(int i = 0; i < AStarMap.Width; i++) {
+            for(int j = 0; j < AStarMap.Height; j++) {
+                CreateGrid(new Vector2(i, j), Color.gray);
             }
         }
+
     }
 
-    private void CreatePath(Vector2 position, Color color) {
+
+    private void CreateGrid(Vector2 position, Color color) {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cube.transform.position = new Vector3(position.x, position.y, 0);
         cube.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
         cube.GetComponent<Renderer>().material.color = color;
         cube.transform.SetParent(cubeParent);
-        
+        cube.AddComponent<Cube>().FindPath = FindPath;
     }
 
     private void Walk() {
@@ -64,10 +67,14 @@ public class TestAStar : MonoBehaviour
     public void FindPath(Vector2 target) {
         // AStar.Instance.
 
+        AStar.Instance.ClearGrid();
 
+        endPoint = pointGrid[(int)target.x, (int)target.y];
 
-        endPoint.position = target;
-
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
         AStar.Instance.FindPath(startPoint, endPoint);
+        sw.Stop();
+        UnityEngine.Debug.Log(sw.ElapsedMilliseconds);
     }
 }

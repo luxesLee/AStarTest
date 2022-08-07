@@ -36,6 +36,9 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scipts\CameraMove.cs" />
+     <Compile Include="Assets\Scipts\Cube.cs" />
+     <Compile Include="Assets\Scipts\AStarMap.cs" />
      <Compile Include="Assets\Scipts\AStar.cs" />
      <Compile Include="Assets\Scipts\AStarPoint.cs" />
      <Compile Include="Assets\Scipts\TestAStar.cs" />

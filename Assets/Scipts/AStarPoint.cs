@@ -8,6 +8,7 @@ public class AStarPoint {
     public bool IsObstacle;
     public Vector2 position;
     public GameObject cube;
+    
 
     /// <summary>
     /// G从起点到指定方格移动花费
