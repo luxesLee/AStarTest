@@ -7,6 +7,7 @@ public class TestAStar : MonoBehaviour
     private Transform cubeParent;
     private AStarPoint[,] pointGrid;
     private AStarPoint startPoint;
+    private AStarPoint endPoint;
 
     private float mTime = 0.7f;
     private float mTimer = 0f;
@@ -48,10 +49,25 @@ public class TestAStar : MonoBehaviour
     }
 
     private void Walk() {
-        
+        if(AStar.Instance.pathList != null && AStar.Instance.pathList.Count > 1) {
+            startPoint = AStar.Instance.pathList[AStar.Instance.pathList.Count - 1];
+            Color color = startPoint.cube.GetComponent<Renderer>().material.color;
+            AStar.Instance.pathList.Remove(startPoint);
+            Destroy(startPoint.cube);
+            startPoint.cube = null;
+
+            startPoint = AStar.Instance.pathList[AStar.Instance.pathList.Count - 1];
+            startPoint.cube.GetComponent<Renderer>().material.color = color;
+        }
     }
 
-    public void FindPath() {
+    public void FindPath(Vector2 target) {
+        // AStar.Instance.
 
+
+
+        endPoint.position = target;
+
+        AStar.Instance.FindPath(startPoint, endPoint);
     }
 }
