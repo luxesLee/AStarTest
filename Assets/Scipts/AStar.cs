@@ -36,40 +36,51 @@ public class AStar
 
         map = AStarMap.Instance;
 
-        // pointGrid = new AStarPoint[10 , 10];
-        // for(int i = 0; i < 10; i++) {
-        //     for(int j = 0; j < 10; j++) {
-        //         pointGrid[i, j] = new AStarPoint(i, j);
-        //     }
-        // }
-        // AddObstacle();
+        AddObstacle(map.lowMap[0, 0]);
     }
 
-    // private void AddObstacle() {
-    //     obstacles.Add(pointGrid[4, 2]);
-    //     obstacles.Add(pointGrid[4, 3]);
-    //     obstacles.Add(pointGrid[4, 4]);
-    //     obstacles.Add(pointGrid[5, 4]);
-    //     obstacles.Add(pointGrid[6, 4]);
-    //     obstacles.Add(pointGrid[6, 3]);
-    //     obstacles.Add(pointGrid[6, 2]);
-    //     obstacles.Add(pointGrid[5, 2]);
+    private void AddObstacle(AStarPoint start) {
 
-    //     foreach(var obstacle in obstacles) {
-    //         obstacle.IsObstacle = true;
-    //         CreatePath(obstacle.position, Color.blue);
-    //     }
-    // }
+        for(int i = 0; i < 500; i++) {
+            int w, h;
+            w = Random.Range(0, AStarMap.Width);
+            h = Random.Range(0, AStarMap.Height);
+            if(map.lowMap[w, h] != start && !obstacles.Contains(map.lowMap[w, h])) {
+                obstacles.Add(map.lowMap[w, h]);
+            }
+        }
+
+        foreach(var obstacle in obstacles) {
+            obstacle.IsObstacle = true;
+            CreatePath(obstacle.position, Color.blue);
+            // GetThePointInHighMap(obstacle).IsObstacle = true;
+        }
+    }
+
+    public void UpdateObstacle(AStarPoint start) {
+        foreach(var obstacle in obstacles) {
+            obstacle.IsObstacle = false;
+            GameObject.Destroy(obstacle.cube);
+            obstacle.cube = null;
+            if(pathList.Contains(obstacle)) {
+                CreatePath(obstacle.position, Color.white);
+            }
+        }
+        obstacles = new List<AStarPoint>();
+
+        AddObstacle(start);
+    }
+
 
     public List<AStarPoint> FindPath(AStarPoint start, AStarPoint end) {
         
         // 如果起点终点在一个大格子内部
-        if(GetThePointInHighMap(start) == GetThePointInHighMap(end)) {
+        // if(GetThePointInHighMap(start) == GetThePointInHighMap(end)) {
             return FindPathInLowMap(start, end, false, null);
-        }
-        else {
-            return FindPathInHighMap(start, end);
-        }
+        // }
+        // else {
+        //     return FindPathInHighMap(start, end);
+        // }
     }
 
     /// <summary>
@@ -116,6 +127,13 @@ public class AStar
             if(openList.Contains(end)) {
                 break;
             }
+        }
+
+        // 目标不可达
+        if(!openList.Contains(end)) {
+            Debug.Log("target cannot get");
+            pathList = new List<AStarPoint>();
+            return pathList;
         }
 
         List<AStarPoint> path = GetPath(start, end, isOverride);
@@ -201,6 +219,7 @@ public class AStar
         return path;
     }
 
+    // 给抽象的AStarPoint添颜色
     private void CreatePath(Vector2 position, Color color) {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cube.transform.position = new Vector3(position.x, position.y, 0);

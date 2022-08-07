@@ -17,8 +17,8 @@ public class AStarMap
     public AStarPoint[,] highMap;
     public AStarPoint[,] lowMap;
 
-    public const int Width = 300;
-    public const int Height = 200;
+    public const int Width = 50;
+    public const int Height = 50;
 
     public AStarMap() {
         InitMap();
