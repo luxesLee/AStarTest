@@ -25,56 +25,20 @@ public class AStar
     // 由终点到起点
     public List<AStarPoint> pathList = new List<AStarPoint>();
     private List<AStarPoint> pathHighList = new List<AStarPoint>();
-    public List<AStarPoint> obstacles = new List<AStarPoint>();
 
     public AStar() {
         Init();
     }
 
     private void Init() {
-
-
         map = AStarMap.Instance;
 
-        AddObstacle(map.lowMap[0, 0]);
-    }
-
-    private void AddObstacle(AStarPoint start) {
-
-        for(int i = 0; i < 500; i++) {
-            int w, h;
-            w = Random.Range(0, AStarMap.Width);
-            h = Random.Range(0, AStarMap.Height);
-            if(map.lowMap[w, h] != start && !obstacles.Contains(map.lowMap[w, h])) {
-                obstacles.Add(map.lowMap[w, h]);
-            }
-        }
-
-        foreach(var obstacle in obstacles) {
-            obstacle.IsObstacle = true;
-            CreatePath(obstacle.position, Color.blue);
-            // GetThePointInHighMap(obstacle).IsObstacle = true;
-        }
-    }
-
-    public void UpdateObstacle(AStarPoint start) {
-        foreach(var obstacle in obstacles) {
-            obstacle.IsObstacle = false;
-            GameObject.Destroy(obstacle.cube);
-            obstacle.cube = null;
-            if(pathList.Contains(obstacle)) {
-                CreatePath(obstacle.position, Color.white);
-            }
-        }
-        obstacles = new List<AStarPoint>();
-
-        AddObstacle(start);
     }
 
 
     public List<AStarPoint> FindPath(AStarPoint start, AStarPoint end) {
         
-        // 如果起点终点在一个大格子内部
+        // 如果起点终点的距离超过一定范围
         // if(GetThePointInHighMap(start) == GetThePointInHighMap(end)) {
             return FindPathInLowMap(start, end, false, null);
         // }
@@ -220,7 +184,7 @@ public class AStar
     }
 
     // 给抽象的AStarPoint添颜色
-    private void CreatePath(Vector2 position, Color color) {
+    public void CreatePath(Vector2 position, Color color) {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cube.transform.position = new Vector3(position.x, position.y, 0);
         cube.GetComponent<Renderer>().material.color = color;

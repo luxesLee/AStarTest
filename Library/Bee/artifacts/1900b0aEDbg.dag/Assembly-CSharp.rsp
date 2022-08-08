@@ -355,6 +355,8 @@
 "Assets/Scipts/AStarPoint.cs"
 "Assets/Scipts/CameraMove.cs"
 "Assets/Scipts/Cube.cs"
+"Assets/Scipts/GameManager.cs"
+"Assets/Scipts/Nav.cs"
 "Assets/Scipts/TestAStar.cs"
 -langversion:9.0
 

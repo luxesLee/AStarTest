@@ -30,15 +30,16 @@ public class TestAStar : MonoBehaviour
     {
         mTimer += Time.deltaTime;
         oTimer += Time.deltaTime;
-        if(oTimer >= oTime) {
-            AStar.Instance.UpdateObstacle(startPoint);
-            oTimer = 0;
-        }
-
         if(mTimer >= mTime) {
             mTimer = 0;
             Walk();
         }
+
+        if(oTimer >= oTime) {
+            AStarMap.Instance.UpdateObstacle(startPoint, AStar.Instance.pathList);
+            oTimer = 0;
+        }
+
     }
 
     private void InitBackGround() {
@@ -77,6 +78,10 @@ public class TestAStar : MonoBehaviour
             }
 
             startPoint = AStar.Instance.pathList[AStar.Instance.pathList.Count - 1];
+            if(startPoint.cube == null) {
+                AStar.Instance.CreatePath(startPoint.position, color);
+                return;
+            }
             startPoint.cube.GetComponent<Renderer>().material.color = color;
         }
     }
@@ -88,10 +93,7 @@ public class TestAStar : MonoBehaviour
 
         endPoint = pointGrid[(int)target.x, (int)target.y];
 
-        Stopwatch sw = new Stopwatch();
-        sw.Start();
         AStar.Instance.FindPath(startPoint, endPoint);
-        sw.Stop();
-        UnityEngine.Debug.Log(sw.ElapsedMilliseconds);
+
     }
 }
